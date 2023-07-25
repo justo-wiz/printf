@@ -1,17 +1,18 @@
 #include "main.h"
 
 /**
- * print_pointer - Prints the value of a pointer variable
+ * print_pointer - Outputs the value of a pointer variable
  * @types: List a of arguments
  * @buffer: Buffer array to handle print
- * @flags:  Calculates active flags
+ * @flags:  Computes active flags
  * @width: get width
  * @precision: Precision specification
  * @size: Size specifier
- * Return: Number of chars printed.
+ * Return: No of chars printed.
  */
 
-int print_pointer(va_list types, char buffer[],	int flags, int width, int precision, int size)
+int print_pointer(int size, int precision, char buffer[],
+int width, va_list types, int flags)
 {
 	char extra_c = 0, padd = ' ';
 	int ind = BUFF_SIZE - 2, length = 2, padd_start = 1; /* length=2, for '0x' */
@@ -43,7 +44,8 @@ int print_pointer(va_list types, char buffer[],	int flags, int width, int precis
 		extra_c = ' ', length++;
 	ind++;
 	/*return (write(1, &buffer[i], BUFF_SIZE - i - 1));*/
-	return (write_pointer(buffer, ind, length, width, flags, padd, extra_c, padd_start));
+	return (write_pointer(buffer, ind, length,
+	width, flags, padd, extra_c, padd_start));
 }
 
 
@@ -57,10 +59,10 @@ int print_pointer(va_list types, char buffer[],	int flags, int width, int precis
  * @size: Size specifier
  * Return: Number of chars printed
  */
-
-int print_non_printable(va_list types, char buffer[], int flags, int width, int precision, int size)
+int print_non_printable(int size, va_list types,
+int precision, int flags, int width, char buffer[])
 {
-	int i = 0, offset = 0;
+	int x = 0, offset = 0;
 	char *str = va_arg(types, char *);
 
 	UNUSED(flags);
@@ -70,22 +72,22 @@ int print_non_printable(va_list types, char buffer[], int flags, int width, int 
 
 	if (str == NULL)
 		return (write(1, "(null)", 6));
-	while (str[i] != '\0')
+	while (str[x] != '\0')
 	{
-		if (is_printable(str[i]))
-			buffer[i + offset] = str[i];
+		if (is_printable(str[x]))
+			buffer[x + offset] = str[x];
 		else
-			offset += append_hexa_code(str[i], buffer, i + offset);
-		i++;
+			offset += append_hexa_code(str[x], buffer, x + offset);
+		x++;
 	}
-	buffer[i + offset] = '\0';
-	return (write(1, buffer, i + offset));
+	buffer[x + offset] = '\0';
+	return (write(1, buffer, x + offset));
 }
 
 
 /**
  * print_reverse - Prints reverse string.
- * @types: Lista of arguments
+ * @types: List of arguments
  * @buffer: Buffer array to handle print
  * @flags:  Calculates active flags
  * @width: get width
@@ -94,11 +96,11 @@ int print_non_printable(va_list types, char buffer[], int flags, int width, int 
  * Return: Numbers of chars printed
  */
 
-
-int print_reverse(va_list types, char buffer[], int flags, int width, int precision, int size)
+int print_reverse(int size, va_list types, char buffer[],
+int precision, int width, int flags)
 {
 	char *str;
-	int i, count = 0;
+	int x, count = 0;
 
 	UNUSED(buffer);
 	UNUSED(flags);
@@ -112,13 +114,12 @@ int print_reverse(va_list types, char buffer[], int flags, int width, int precis
 		UNUSED(precision);
 		str = ")Null(";
 	}
-	for (i = 0; str[i]; i++)
-		;
-	for (i = i - 1; i >= 0; i--)
+	for (x = 0; str[x]; x++)
+	for (x = i - 1; x >= 0; x--)
 	{
-		char z = str[i];
+		char y = str[x];
 
-		write(1, &z, 1);
+		write(1, &y, 1);
 		count++;
 	}
 	return (count);
@@ -135,9 +136,10 @@ int print_reverse(va_list types, char buffer[], int flags, int width, int precis
  * Return: Numbers of chars printed
  */
 
-int print_rot13string(va_list types, char buffer[], int flags, int width, int precision, int size)
+int print_rot13string(int size, va_list types, int flags,
+int precision, char buffer[], int width)
 {
-	char x;
+	char y;
 	char *str;
 	unsigned int i, j;
 	int count = 0;
@@ -161,16 +163,16 @@ int print_rot13string(va_list types, char buffer[], int flags, int width, int pr
 		{
 			if (in[j] == str[i])
 			{
-				x = out[j];
-				write(1, &x, 1);
+				y = out[j];
+				write(1, &y, 1);
 				count++;
 				break;
 			}
 		}
 		if (!in[j])
 		{
-			x = str[i];
-			write(1, &x, 1);
+			y = str[i];
+			write(1, &y, 1);
 			count++;
 		}
 	}
